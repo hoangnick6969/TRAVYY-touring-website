@@ -563,8 +563,8 @@ exports.resetPassword = async (req, res) => {
         
         <div style="background: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #16a34a;">
           <p><strong>⏰ Thời gian:</strong> ${new Date().toLocaleString(
-            "vi-VN"
-          )}</p>
+        "vi-VN"
+      )}</p>
           <p><strong>🌐 IP:</strong> ${req.ip || "N/A"}</p>
           <p><strong>💻 Thiết bị:</strong> ${req.get("user-agent") || "N/A"}</p>
         </div>

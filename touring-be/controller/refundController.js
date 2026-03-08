@@ -718,8 +718,7 @@ exports.reviewRefund = async (req, res) => {
         refund.finalRefundAmount = adjustedAmount;
         refund.addTimelineEntry(
           "approved",
-          `Approved with adjusted amount: ${adjustedAmount}. ${
-            reviewNote || ""
+          `Approved with adjusted amount: ${adjustedAmount}. ${reviewNote || ""
           }`,
           adminId
         );
@@ -849,25 +848,22 @@ const sendApprovalEmail = async (user, refund, booking) => {
   </div>
 
   <div class="content">
-    <p>Xin chào <strong>${
-      user.fullName || user.name || "Quý khách"
-    }</strong>,</p>
+    <p>Xin chào <strong>${user.fullName || user.name || "Quý khách"
+      }</strong>,</p>
     
     <div class="success-badge">
       🎉 Yêu cầu hoàn tiền của bạn đã được chấp nhận!
     </div>
 
-    <p>Chúng tôi vui mừng thông báo rằng yêu cầu hoàn tiền <strong>${
-      refund.refundReference
-    }</strong> của bạn đã được xem xét và chấp nhận.</p>
+    <p>Chúng tôi vui mừng thông báo rằng yêu cầu hoàn tiền <strong>${refund.refundReference
+      }</strong> của bạn đã được xem xét và chấp nhận.</p>
 
     <div class="info-box">
       <h3 style="margin-top: 0; color: #111827;">💰 Số Tiền Hoàn</h3>
       <p style="font-size: 24px; font-weight: bold; color: #059669; margin: 10px 0;">${formatVND(
         refund.finalRefundAmount
       )}</p>
-      <p style="font-size: 14px; color: #6b7280;">Mã booking: ${
-        booking.orderRef || booking._id
+      <p style="font-size: 14px; color: #6b7280;">Mã booking: ${booking.orderRef || booking._id
       }</p>
     </div>
 
@@ -878,8 +874,7 @@ const sendApprovalEmail = async (user, refund, booking) => {
     </div>
 
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${
-        process.env.FRONTEND_URL || "https://travvytouring.page"
+      <a href="${process.env.FRONTEND_URL || "https://travvytouring.page"
       }/profile/refunds" class="cta-button">
         📝 Cung Cấp Thông Tin Ngân Hàng
       </a>
@@ -1049,8 +1044,7 @@ exports.processRefund = async (req, res) => {
       if (refundResult.requiresManualProcessing) {
         refund.addTimelineEntry(
           "completed",
-          `⚠️ Refund requires manual processing via ${refundResult.provider}. ${
-            note || ""
+          `⚠️ Refund requires manual processing via ${refundResult.provider}. ${note || ""
           }`,
           adminId
         );
@@ -1421,9 +1415,8 @@ const sendRefundCompletionEmail = async (refund, booking, user) => {
   </div>
 
   <div class="content">
-    <p>Xin chào <strong>${
-      user.fullName || user.name || "Quý khách"
-    }</strong>,</p>
+    <p>Xin chào <strong>${user.fullName || user.name || "Quý khách"
+      }</strong>,</p>
     
     <div class="success-badge">
       🎉 Yêu cầu hoàn tiền của bạn đã được xử lý thành công!
@@ -1447,11 +1440,10 @@ const sendRefundCompletionEmail = async (refund, booking, user) => {
       </div>
       <div class="info-row">
         <span class="info-label">Loại Refund:</span>
-        <span class="info-value">${
-          refund.refundType === "pre_trip_cancellation"
-            ? "Hủy trước chuyến đi"
-            : "Vấn đề sau chuyến đi"
-        }</span>
+        <span class="info-value">${refund.refundType === "pre_trip_cancellation"
+        ? "Hủy trước chuyến đi"
+        : "Vấn đề sau chuyến đi"
+      }</span>
       </div>
       <div class="info-row">
         <span class="info-label">Tỷ lệ hoàn:</span>
@@ -1460,13 +1452,12 @@ const sendRefundCompletionEmail = async (refund, booking, user) => {
       <div class="info-row">
         <span class="info-label">Ngày xử lý:</span>
         <span class="info-value">${new Date(
-          refund.completedAt
-        ).toLocaleDateString("vi-VN")}</span>
+        refund.completedAt
+      ).toLocaleDateString("vi-VN")}</span>
       </div>
     </div>
 
-    ${
-      refund.bankInfo?.accountNumber
+    ${refund.bankInfo?.accountNumber
         ? `
     <div class="bank-info">
       <h3>🏦 Thông Tin Tài Khoản Nhận Tiền</h3>
@@ -1485,18 +1476,16 @@ const sendRefundCompletionEmail = async (refund, booking, user) => {
     </div>
     `
         : ""
-    }
+      }
 
-    ${
-      refund.refundPayment?.transactionId
+    ${refund.refundPayment?.transactionId
         ? `
     <div class="info-box">
       <div class="info-row">
         <span class="info-label">Mã giao dịch:</span>
         <span class="info-value">${refund.refundPayment.transactionId}</span>
       </div>
-      ${
-        refund.refundPayment.provider
+      ${refund.refundPayment.provider
           ? `
       <div class="info-row">
         <span class="info-label">Phương thức:</span>
@@ -1504,11 +1493,11 @@ const sendRefundCompletionEmail = async (refund, booking, user) => {
       </div>
       `
           : ""
-      }
+        }
     </div>
     `
         : ""
-    }
+      }
 
     <div class="note">
       <strong>📌 Lưu ý:</strong><br>
@@ -1518,8 +1507,7 @@ const sendRefundCompletionEmail = async (refund, booking, user) => {
     </div>
 
     <div style="text-align: center;">
-      <a href="${
-        process.env.FRONTEND_URL || "https://travvytouring.page"
+      <a href="${process.env.FRONTEND_URL || "https://travvytouring.page"
       }/profile/refunds" class="button">
         Xem Chi Tiết Refund
       </a>
@@ -1615,12 +1603,10 @@ exports.createManualRefundPayment = async (req, res) => {
       process.env.MOMO_CREATE_ENDPOINT ||
       "https://test-payment.momo.vn/v2/gateway/api/create";
     // Redirect back with payment success flag for auto-verification
-    const redirectUrl = `${
-      process.env.FRONTEND_URL || "https://travvytouring.page"
-    }/admin/refunds?paymentSuccess=true&refundId=${refund._id}`;
-    const ipnUrl = `${
-      process.env.BACKEND_URL || "https://api.travvytouring.page"
-    }/api/refunds/momo-refund-ipn`;
+    const redirectUrl = `${process.env.FRONTEND_URL || "https://travvytouring.page"
+      }/admin/refunds?paymentSuccess=true&refundId=${refund._id}`;
+    const ipnUrl = `${process.env.BACKEND_URL || "https://api.travvytouring.page"
+      }/api/refunds/momo-refund-ipn`;
 
     console.log("MoMo Config:", {
       hasPartnerCode: !!partnerCode,

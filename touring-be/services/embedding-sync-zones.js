@@ -12,7 +12,7 @@ const EMBED_URL = process.env.AI_EMBED_URL || 'https://ai-embed.travvytouring.pa
 async function syncZones(isAutomatic = false) {
   try {
     console.log('🔄 Syncing zones to embedding service...\n');
-    
+
     // Connect MongoDB only if not already connected
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(process.env.MONGO_URI);
@@ -20,16 +20,16 @@ async function syncZones(isAutomatic = false) {
     } else {
       console.log('ℹ️ MongoDB already connected (reusing existing connection)');
     }
-    
+
     // Get all active zones
     const zones = await Zone.find({ isActive: true }).lean();
     console.log(`📦 Found ${zones.length} active zones\n`);
-    
+
     if (zones.length === 0) {
       console.log('⚠️ No zones to sync');
       process.exit(0);
     }
-    
+
     // Build embedding items with RICH semantic text
     const items = zones.map(zone => {
       // ✅ COMPREHENSIVE semantic text for better matching
@@ -43,11 +43,11 @@ async function syncZones(isAutomatic = false) {
         zone.vibeKeywords?.join(', ') || '',
         zone.tips?.join('. ') || ''
       ].filter(Boolean);
-      
+
       // Limit text length (avoid too long embeddings)
       const fullText = textParts.join(' - ');
       const text = fullText.length > 1000 ? fullText.substring(0, 1000) + '...' : fullText;
-      
+
       return {
         id: zone.id,
         type: 'zone',
@@ -67,33 +67,33 @@ async function syncZones(isAutomatic = false) {
         }
       };
     });
-    
+
     console.log('📝 Sample embedding text:');
     console.log(`   "${items[0].text.substring(0, 150)}..."\n`);
-    
+
     // Upsert to embedding service
     console.log('📤 Upserting to embedding service...');
     console.log(`   URL: ${EMBED_URL}/upsert`);
     console.log(`   Items: ${items.length}\n`);
-    
+
     const res = await fetch(`${EMBED_URL}/upsert`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items })
     });
-    
+
     if (!res.ok) {
       const text = await res.text();
       throw new Error(`HTTP ${res.status}: ${text}`);
     }
-    
+
     const result = await res.json();
     console.log('✅ Upsert complete:', {
       added: result.added,
       removed: result.removed,
       total: result.total
     });
-    
+
     // Verify index
     console.log('\n📊 Verifying index...');
     const healthRes = await fetch(`${EMBED_URL}/healthz`);
@@ -103,7 +103,7 @@ async function syncZones(isAutomatic = false) {
       metadata: health.metadata,
       model: health.model
     });
-    
+
     // Test hybrid search
     console.log('\n🧪 Testing hybrid search...');
     const testRes = await fetch(`${EMBED_URL}/hybrid-search`, {
@@ -116,7 +116,7 @@ async function syncZones(isAutomatic = false) {
         filter_type: 'zone'
       })
     });
-    
+
     if (testRes.ok) {
       const testResult = await testRes.json();
       console.log('✅ Test search results:', {
@@ -131,12 +131,12 @@ async function syncZones(isAutomatic = false) {
     } else {
       console.warn('⚠️ Test search failed:', testRes.status);
     }
-    
+
     console.log('\n✅ Sync complete!');
     if (!isAutomatic) {
       process.exit(0);
     }
-    
+
   } catch (error) {
     console.error('\n❌ Error:', error.message);
     console.error('Stack:', error.stack);
